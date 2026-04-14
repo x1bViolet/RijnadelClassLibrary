@@ -12,8 +12,8 @@
     <Title>WPF Tools</Title>
     <Authors>x1bViolet</Authors>
     <Description>Common utility methods for WPF</Description>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>Added SaveFileDialog &amp; OpenFileDialog helpers (NewSaveFileDialog &amp; NewOpenFileDialog)</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Added Await() method</PackageReleaseNotes>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
