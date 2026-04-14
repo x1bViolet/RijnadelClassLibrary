@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+    <PackageReference Include="RijnadelClassLibrary.WPFTools" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

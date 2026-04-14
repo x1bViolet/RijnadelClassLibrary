@@ -34,7 +34,7 @@ namespace RijnadelClassLibrary
 
         public class HighlightionBrush(string HexColor) : HighlightingBrush
         {
-            private readonly Brush ActualBrush = ToSolidColorBrush(HexColor);
+            private readonly Brush ActualBrush = RijnadelClassLibrary.WPFTools.ToSolidColorBrush(HexColor);
             public override Brush GetBrush(ITextRunConstructionContext Context) => ActualBrush;
         }
 
