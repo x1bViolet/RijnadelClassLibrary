@@ -12,6 +12,8 @@
     <Title>WPF Tools</Title>
     <Authors>x1bViolet</Authors>
     <Description>Common utility methods for WPF</Description>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Added SaveFileDialog &amp; OpenFileDialog helpers (NewSaveFileDialog &amp; NewOpenFileDialog)</PackageReleaseNotes>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
