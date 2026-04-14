@@ -12,6 +12,8 @@
     <Title>File Events Notifier</Title>
     <Authors>x1bViolet</Authors>
     <Description>Simplified FileSystemWatcher</Description>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Used try-catch to handler in "File Events Notifier" initializers</PackageReleaseNotes>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

@@ -79,7 +79,7 @@ namespace RijnadelClassLibrary
         {
             Reset();
 
-            if (File.Exists(TargetFile))
+            try
             {
                 this.Path = System.IO.Path.GetDirectoryName(TargetFile)!;
                 this.Filter = System.IO.Path.GetFileName(TargetFile)!;
@@ -87,16 +87,16 @@ namespace RijnadelClassLibrary
                 this.IncludeSubdirectories = false;
                 this.EnableRaisingEvents = true;
             }
-            else
+            catch (Exception Occurred)
             {
-                ExceptionsHandler?.Invoke(new FileNotFoundException("File not found"), $"This exception occured while trying to setup file watcher for \"{TargetFile}\"");
+                ExceptionsHandler?.Invoke(Occurred, $"This exception occured while trying to setup file watcher for \"{TargetFile}\"");
             }
         }
         public void WatchDirectory(string TargetDirectory, Collection<string> Filters, bool IncludeSubdirectories = true)
         {
             Reset();
 
-            if (Directory.Exists(TargetDirectory))
+            try
             {
                 this.Path = TargetDirectory;
                 this.Filters.Clear();
@@ -108,9 +108,9 @@ namespace RijnadelClassLibrary
                 this.IncludeSubdirectories = IncludeSubdirectories;
                 this.EnableRaisingEvents = true;
             }
-            else
+            catch (Exception Occurred)
             {
-                ExceptionsHandler?.Invoke(new DirectoryNotFoundException("Directory not found"), $"This exception occured while trying to setup directory watcher for \"{TargetDirectory}\"");
+                ExceptionsHandler?.Invoke(Occurred, $"This exception occured while trying to setup directory watcher for \"{TargetDirectory}\"");
             }
         }
         public void Reset()
