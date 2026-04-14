@@ -76,7 +76,7 @@ namespace RijnadelClassLibrary
 
         #region Style DependencyProperties
         public CornerRadius CornerRadius { get => (CornerRadius)GetValue(CornerRadiusProperty); set => SetValue(CornerRadiusProperty, value); }
-        public static readonly DependencyProperty CornerRadiusProperty = RegisterAlt<CornerRadius>();
+        public static readonly DependencyProperty CornerRadiusProperty = RegisterAlt<CornerRadius>(DefaultValue: new CornerRadius());
 
 
         public Brush CaretBrush { get => this.TextArea.Caret.CaretBrush; set => this.TextArea.Caret.CaretBrush = value; }

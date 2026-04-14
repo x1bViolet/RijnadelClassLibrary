@@ -12,6 +12,8 @@
     <Title>Syntaxed Text Editor Base</Title>
     <Authors>x1bViolet</Authors>
     <Description>Main implementations of AvalonEdit interfaces and classes</Description>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Fixed CornerRadius property default value</PackageReleaseNotes>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
