@@ -1,3 +1,4 @@
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -174,6 +175,53 @@ namespace RijnadelClassLibrary
 
         #endregion
 
+        #endregion
+
+
+        #region System dialogues
+        public static SaveFileDialog NewSaveFileDialog(string FilesHint, IEnumerable<string> Extensions, string FileDefaultName = "", string DefaultDirectory = "")
+        {
+            List<string> FileFilters_DefaultExt = [];
+            List<string> FileFilters_Filter = [];
+
+            foreach (string Filter in Extensions)
+            {
+                FileFilters_DefaultExt.Add($".{Filter}");
+                FileFilters_Filter.Add($"*.{Filter}");
+            }
+
+            SaveFileDialog FileSaving = new()
+            {
+                DefaultExt = string.Join("|", FileFilters_DefaultExt), // .png|.jpg
+                Filter = $"{FilesHint}|{string.Join(";", FileFilters_Filter)}",  // *.png;*.jpg
+                FileName = FileDefaultName,
+                DefaultDirectory = DefaultDirectory
+            };
+
+            return FileSaving;
+        }
+
+
+        public static OpenFileDialog NewOpenFileDialog(string FilesHint, IEnumerable<string> Extensions, string DefaultDirectory = "")
+        {
+            List<string> FileFilters_DefaultExt = [];
+            List<string> FileFilters_Filter = [];
+
+            foreach (string Filter in Extensions.Select(Extension => Extension.Trim()))
+            {
+                FileFilters_DefaultExt.Add($".{Filter}");
+                FileFilters_Filter.Add($"*.{Filter}");
+            }
+
+            OpenFileDialog FileSelection = new()
+            {
+                DefaultExt = string.Join("|", FileFilters_DefaultExt), // .png|.jpg
+                Filter = $"{FilesHint}|{string.Join(";", FileFilters_Filter)}",  // *.png;*.jpg,
+                DefaultDirectory = DefaultDirectory
+            };
+
+            return FileSelection;
+        }
         #endregion
 
 
