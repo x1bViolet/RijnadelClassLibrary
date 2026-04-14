@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 #pragma warning disable CS1573
 #pragma warning disable CS1591
@@ -501,6 +502,17 @@ namespace RijnadelClassLibrary
         public static void StopAnimation(this UIElement Target, DependencyProperty AnimatedProperty)
         {
             Target.BeginAnimation(AnimatedProperty, null);
+        }
+
+        public static void Await(double Seconds, Action CompleteAction)
+        {
+            DispatcherTimer Timer = new() { Interval = TimeSpan.FromSeconds(Seconds) };
+            Timer.Tick += (_, _) =>
+            {
+                Timer.Stop();
+                CompleteAction.Invoke();
+            };
+            Timer.Start();
         }
 
         public static void CenterOnScreen(this Window Target)
