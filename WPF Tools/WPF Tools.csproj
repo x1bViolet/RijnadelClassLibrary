@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>RijnadelClassLibrary</RootNamespace>
@@ -12,8 +14,8 @@
     <Title>WPF Tools</Title>
     <Authors>x1bViolet</Authors>
     <Description>Common utility methods for WPF</Description>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>Added Await() method</PackageReleaseNotes>
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>Changed CreateBindedCopy(this TextBlock Target) method and added extensions for color parsing from hex</PackageReleaseNotes>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

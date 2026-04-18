@@ -1,6 +1,5 @@
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -19,6 +18,18 @@ namespace RijnadelClassLibrary
     public static class WPFTools
     {
         #region Color from string
+
+        extension(SolidColorBrush)
+        {
+            /// <inheritdoc cref="ToSolidColorBrush(string?, bool)"/>
+            public static SolidColorBrush FromHexValue(string HexValue, bool AlphaAtTheEnd = false) => ToSolidColorBrush(HexValue, AlphaAtTheEnd);
+        }
+        extension(Color)
+        {
+            /// <inheritdoc cref="ToColor(string?, bool)"/>
+            public static Color FromHexValuå(string HexValue, bool AlphaAtTheEnd = false) => ToColor(HexValue, AlphaAtTheEnd);
+        }
+
 
         private static byte AsByte(string Hex) => Convert.ToByte(Hex, 16);
 
@@ -40,10 +51,7 @@ namespace RijnadelClassLibrary
 
                 return new Color()
                 {
-                    A = AsByte(Alpha),
-                    R = AsByte(RGB[0..2]),
-                    G = AsByte(RGB[2..4]),
-                    B = AsByte(RGB[4..6]),
+                    A = AsByte(Alpha), R = AsByte(RGB[0..2]), G = AsByte(RGB[2..4]), B = AsByte(RGB[4..6]),
                 };
             }
             catch
@@ -68,10 +76,7 @@ namespace RijnadelClassLibrary
 
                 OutColor = new Color()
                 {
-                    A = AsByte(Alpha),
-                    R = AsByte(RGB[0..2]),
-                    G = AsByte(RGB[2..4]),
-                    B = AsByte(RGB[4..6]),
+                    A = AsByte(Alpha), R = AsByte(RGB[0..2]), G = AsByte(RGB[2..4]), B = AsByte(RGB[4..6]),
                 };
 
                 return true;
@@ -162,6 +167,7 @@ namespace RijnadelClassLibrary
                 using (MemoryStream Stream = new(buffer: File.ReadAllBytes(ImagePath)))
                 {
                     BitmapImage LoadedImage = new();
+
                     LoadedImage.BeginInit();
                     LoadedImage.StreamSource = Stream;
                     LoadedImage.CacheOption = BitmapCacheOption.OnLoad;
@@ -294,10 +300,7 @@ namespace RijnadelClassLibrary
         public static RoutedEvent RegisterEvent<OwnerType, HandlerType>(RoutingStrategy RoutingStrategy = RoutingStrategy.Bubble, [CallerMemberName] string RoutedEventName = "")
         {
             return EventManager.RegisterRoutedEvent(
-                name: Regex.Replace(RoutedEventName, @"Event$", ""),
-                routingStrategy: RoutingStrategy,
-                handlerType: typeof(HandlerType),
-                ownerType: typeof(OwnerType));
+                name: Regex.Replace(RoutedEventName, @"Event$", ""), ownerType: typeof(OwnerType), handlerType: typeof(HandlerType), routingStrategy: RoutingStrategy);
         }
 
         public static DependencyProperty RegisterProperty<OwnerType, PropertyType>(PropertyType? DefaultValue = default, PropertyChangedCallback? PropertyChangedEvent = null, bool BindsTwoWayByDefault = false, [CallerMemberName] string DependencyPropertyName = "")
@@ -555,12 +558,9 @@ namespace RijnadelClassLibrary
 
             for (int PixelIndex = 0; PixelIndex < Pixels.Length; PixelIndex += 4)
             {
-                /* R */
-                Pixels[PixelIndex + 2] = (byte)(Pixels[PixelIndex + 2] * TintColor.R / 255);
-                /* G */
-                Pixels[PixelIndex + 1] = (byte)(Pixels[PixelIndex + 1] * TintColor.G / 255);
-                /* B */
-                Pixels[PixelIndex] = (byte)(Pixels[PixelIndex] * TintColor.B / 255);
+                /* R */Pixels[PixelIndex + 2] = (byte)(Pixels[PixelIndex + 2] * TintColor.R / 255);
+                /* G */Pixels[PixelIndex + 1] = (byte)(Pixels[PixelIndex + 1] * TintColor.G / 255);
+                /* B */Pixels[PixelIndex    ] = (byte)(Pixels[PixelIndex    ] * TintColor.B / 255);
             }
 
             OutputImage.WritePixels(new Int32Rect(0, 0, ImageWidth, ImageHeight), Pixels, Stride, 0);
@@ -568,34 +568,21 @@ namespace RijnadelClassLibrary
             return OutputImage;
         }
 
-
-        public static double GetInlineTextHeight(this TextBlock Source)
-        {
-            return new FormattedText(
-                "Text",
-                CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight,
-                new Typeface(Source.FontFamily, Source.FontStyle, Source.FontWeight, FontStretches.Normal),
-                Source.FontSize,
-                Brushes.Black,
-                VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip
-            ).Height;
-        }
-
-
-        public static TextBlock CreateBindedClone(this TextBlock TargetTextBlock, Inline? Content = null)
+        public static TextBlock CreateBindedCopy(this TextBlock TargetTextBlock, List<Inline>? InitialContent = null, List<DependencyProperty>? PropertyExceptions = null)
         {
             TextBlock Copy = new();
-            Copy.BindSameProperties(TargetTextBlock,
-            [
-                TextBlock.FontSizeProperty,   TextBlock.FontFamilyProperty,           TextBlock.FontWeightProperty,    TextBlock.FontStyleProperty, TextBlock.FontStretchProperty,
-                TextBlock.ForegroundProperty, TextBlock.BackgroundProperty,           TextBlock.TextAlignmentProperty, TextBlock.TextWrappingProperty,
-                TextBlock.LineHeightProperty, TextBlock.LineStackingStrategyProperty, TextBlock.TextTrimmingProperty
-            ]);
-            if (Content is not null)
+            List<DependencyProperty> PropertiesToBind = [
+                TextBlock.FontSizeProperty,    TextBlock.FontFamilyProperty,           TextBlock.FontWeightProperty,    TextBlock.FontStyleProperty,    TextBlock.FontStretchProperty,
+                TextBlock.ForegroundProperty,  TextBlock.BackgroundProperty,           TextBlock.TextAlignmentProperty, TextBlock.TextWrappingProperty, TextBlock.TextDecorationsProperty,
+                TextBlock.TextEffectsProperty, TextBlock.BaselineOffsetProperty,       TextBlock.IsHyphenationEnabledProperty,
+                TextBlock.LineHeightProperty,  TextBlock.LineStackingStrategyProperty, TextBlock.TextTrimmingProperty
+            ];
+            foreach (DependencyProperty Property in PropertiesToBind)
             {
-                Copy.Inlines.Add(Content);
+                if (PropertyExceptions is not null && PropertyExceptions.Contains(Property)) continue;
+                Copy.BindSame(Property, TargetTextBlock);
             }
+            InitialContent?.ForEach(Copy.Inlines.Add);
 
             return Copy;
         }
