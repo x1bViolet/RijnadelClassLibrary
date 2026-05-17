@@ -14,8 +14,8 @@
     <Title>WPF Tools</Title>
     <Authors>x1bViolet</Authors>
     <Description>Common utility methods for WPF</Description>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>Changed CreateBindedCopy(this TextBlock Target) method and added extensions for color parsing from hex</PackageReleaseNotes>
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>Replaced DefaultDirectory with InitialDirectory in file dialogs (NewSaveFileDialog/)</PackageReleaseNotes>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

@@ -186,7 +186,7 @@ namespace RijnadelClassLibrary
 
 
         #region System dialogues
-        public static SaveFileDialog NewSaveFileDialog(string FilesHint, IEnumerable<string> Extensions, string FileDefaultName = "", string DefaultDirectory = "")
+        public static SaveFileDialog NewSaveFileDialog(string FilesHint, IEnumerable<string> Extensions, string FileDefaultName = "", string InitialDirectory = "")
         {
             List<string> FileFilters_DefaultExt = [];
             List<string> FileFilters_Filter = [];
@@ -202,14 +202,14 @@ namespace RijnadelClassLibrary
                 DefaultExt = string.Join("|", FileFilters_DefaultExt), // .png|.jpg
                 Filter = $"{FilesHint}|{string.Join(";", FileFilters_Filter)}",  // *.png;*.jpg
                 FileName = FileDefaultName,
-                DefaultDirectory = DefaultDirectory
+                InitialDirectory = InitialDirectory
             };
 
             return FileSaving;
         }
 
 
-        public static OpenFileDialog NewOpenFileDialog(string FilesHint, IEnumerable<string> Extensions, string DefaultDirectory = "")
+        public static OpenFileDialog NewOpenFileDialog(string FilesHint, IEnumerable<string> Extensions, string InitialDirectory = "")
         {
             List<string> FileFilters_DefaultExt = [];
             List<string> FileFilters_Filter = [];
@@ -224,7 +224,7 @@ namespace RijnadelClassLibrary
             {
                 DefaultExt = string.Join("|", FileFilters_DefaultExt), // .png|.jpg
                 Filter = $"{FilesHint}|{string.Join(";", FileFilters_Filter)}",  // *.png;*.jpg,
-                DefaultDirectory = DefaultDirectory
+                InitialDirectory = InitialDirectory
             };
 
             return FileSelection;
