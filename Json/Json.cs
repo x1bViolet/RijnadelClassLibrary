@@ -18,13 +18,13 @@ namespace RijnadelClassLibrary
 
 
         #region Serialization
-        public static string SerializeToFormattedJsonText(this object Target, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.LF)
+        public static string SerializeToFormattedJsonText(this object Target, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.LF, Formatting Formatting = Formatting.Indented)
         {
             using (StringWriter StringWriter = new())
             {
                 using (JsonTextWriter JsonWriter = new(textWriter: StringWriter))
                 {
-                    JsonWriter.Formatting = Formatting.Indented;
+                    JsonWriter.Formatting = Formatting;
                     JsonWriter.Indentation = IndentationSize;
 
                     JsonSerializer Serializer = new()
@@ -46,11 +46,11 @@ namespace RijnadelClassLibrary
         }
 
 
-        public static void SerializeToFormattedJsonFile(this object Source, string Path, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.CRLF, bool IsBOM = false)
+        public static void SerializeToFormattedJsonFile(this object Source, string Path, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.CRLF, Formatting Formatting = Formatting.Indented, bool IsBOM = false)
         {
             UTF8Encoding Encoding = new(encoderShouldEmitUTF8Identifier: IsBOM);
 
-            string Serialized = Source.SerializeToFormattedJsonText(Context: Context,  IndentationSize: IndentationSize,  LineBreakMode: LineBreakMode);
+            string Serialized = Source.SerializeToFormattedJsonText(Context: Context,  IndentationSize: IndentationSize,  LineBreakMode: LineBreakMode,  Formatting: Formatting);
             File.WriteAllText(Path, Serialized, Encoding);
         }
 

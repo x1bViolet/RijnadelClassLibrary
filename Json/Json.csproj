@@ -11,6 +11,8 @@
     <PackageId>RijnadelClassLibrary.Json</PackageId>
     <Title>Common Json utils</Title>
     <Authors>x1bViolet</Authors>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Added Formatting paramter for methods</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
