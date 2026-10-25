@@ -18,7 +18,7 @@ namespace RijnadelClassLibrary
 
 
         #region Serialization
-        public static string SerializeToFormattedJsonText(this object Target, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.LF, Formatting Formatting = Formatting.Indented)
+        public static string SerializeToFormattedJsonText(this object Target, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.LF, Formatting Formatting = Formatting.Indented, bool IgnoreDefaultValues = false)
         {
             using (StringWriter StringWriter = new())
             {
@@ -30,6 +30,7 @@ namespace RijnadelClassLibrary
                     JsonSerializer Serializer = new()
                     {
                         NullValueHandling = NullValueHandling.Ignore,
+                        DefaultValueHandling = IgnoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
                         Context = new StreamingContext(StreamingContextStates.Other, Context),
                         Converters = { new StringEnumConverter() },
                     };
@@ -46,11 +47,11 @@ namespace RijnadelClassLibrary
         }
 
 
-        public static void SerializeToFormattedJsonFile(this object Source, string Path, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.CRLF, Formatting Formatting = Formatting.Indented, bool IsBOM = false)
+        public static void SerializeToFormattedJsonFile(this object Source, string Path, object? Context = null, int IndentationSize = 2, LineBreakMode LineBreakMode = LineBreakMode.CRLF, Formatting Formatting = Formatting.Indented, bool IsBOM = false, bool IgnoreDefaultValues = false)
         {
             UTF8Encoding Encoding = new(encoderShouldEmitUTF8Identifier: IsBOM);
 
-            string Serialized = Source.SerializeToFormattedJsonText(Context: Context,  IndentationSize: IndentationSize,  LineBreakMode: LineBreakMode,  Formatting: Formatting);
+            string Serialized = Source.SerializeToFormattedJsonText(Context: Context,  IndentationSize: IndentationSize,  LineBreakMode: LineBreakMode,  Formatting: Formatting,  IgnoreDefaultValues: IgnoreDefaultValues);
             File.WriteAllText(Path, Serialized, Encoding);
         }
 
@@ -147,6 +148,38 @@ namespace RijnadelClassLibrary
         {
             Match IndentationMatch = Regex.Match(JsonText.Trim(), @"^{(\r)?\n(?<Indentation> +)""");
             return IndentationMatch.Success ? IndentationMatch.Groups["Indentation"].Length : FailedMatchFallback;
+        }
+
+
+        public class InvalidEnumLiteralResolver<TEnum>(TEnum DefaultEnumValueInput) : JsonConverter<TEnum> where TEnum : struct, Enum
+        {
+            private readonly TEnum DefaultEnumValue = DefaultEnumValueInput;
+
+            public override TEnum ReadJson(JsonReader Reader, Type ObjectType, TEnum ExistingValue, bool HasExistingValue, JsonSerializer Serializer)
+            {
+                if (Reader.TokenType == JsonToken.String)
+                {
+                    string? EnumText = Reader.Value?.ToString();
+                    if (Enum.TryParse(EnumText, ignoreCase: true, out TEnum ParsedEnum))
+                    {
+                        return ParsedEnum;
+                    }
+                    else
+                    {
+                        return DefaultEnumValue;
+                    }
+                }
+                // Maybe `if (Reader.TokenType == JsonToken.Integer)` too, unused there
+                else
+                {
+                    return DefaultEnumValue;
+                }
+            }
+
+            public override void WriteJson(JsonWriter Writer, TEnum Value, JsonSerializer Serializer)
+            {
+                Writer.WriteValue(Value.ToString());
+            }
         }
         #endregion
     }

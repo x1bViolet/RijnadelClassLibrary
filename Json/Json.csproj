@@ -11,8 +11,8 @@
     <PackageId>RijnadelClassLibrary.Json</PackageId>
     <Title>Common Json utils</Title>
     <Authors>x1bViolet</Authors>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>Added Formatting paramter for methods</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Added IgnoreDefaultValues parameter to methods and InvalidEnumLiteralResolver&lt;TEnum&gt; JsonConverter class</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
