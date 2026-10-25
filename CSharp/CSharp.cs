@@ -37,9 +37,9 @@ namespace RijnadelClassLibrary
             TargetString = PartPattern.Replace(TargetString, Match => "");
             return TargetString;
         }
-        public static string RegexReplace(this string TargetString, [StringSyntax(StringSyntaxAttribute.Regex)] string Pattern, string Repalcement)
+        public static string RegexReplace(this string TargetString, [StringSyntax(StringSyntaxAttribute.Regex)] string Pattern, string Replacement)
         {
-            TargetString = Regex.Replace(TargetString, Pattern, Repalcement);
+            TargetString = Regex.Replace(TargetString, Pattern, Replacement);
             return TargetString;
         }
         public static string RegexRemove(this string TargetString, [StringSyntax(StringSyntaxAttribute.Regex)] string PartPattern)
@@ -198,6 +198,33 @@ namespace RijnadelClassLibrary
                 return Fallback;
             }
         }
+
+
+        #region Wildcards
+        public static bool FindMatchedWildcardPatterns(this string CheckString, List<string> GivenWildcardPatterns, out List<string> MatchedWildcardPatterns)
+        {
+            MatchedWildcardPatterns = [];
+            foreach (string WildcardPattern in GivenWildcardPatterns)
+            {
+                const string StarMarker = "\0WILDCARD_STAR\0";
+                const string QuestionMarker = "\0WILDCARD_QUESTION\0";
+
+                string WildcardTransformedToRegex = Regex.Escape(WildcardPattern.Replace("*", StarMarker).Replace("?", QuestionMarker)).Replace(StarMarker, ".*?").Replace(QuestionMarker, ".");
+
+                if (Regex.Match(CheckString, WildcardTransformedToRegex).Success)
+                {
+                    MatchedWildcardPatterns.Add(WildcardPattern);
+                }
+            }
+
+            return MatchedWildcardPatterns.Count > 0;
+        }
+        public static bool MatchesWildcardPatterns(this string CheckString, List<string> GivenWildcardPatterns)
+        {
+            return FindMatchedWildcardPatterns(CheckString, GivenWildcardPatterns, out _);
+        }
+        #endregion
+
         #endregion
 
 

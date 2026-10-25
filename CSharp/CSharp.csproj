@@ -12,6 +12,8 @@
     <Title>Common CSharp utils</Title>
     <Authors>x1bViolet</Authors>
     <Description>Common utility methods for C#</Description>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Added methods for Wildcard Patterns matching</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
